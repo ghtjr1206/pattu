@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardDAO">
+
+<!-- 	<resultMap type="boarddto" id="board"> -->
+<!-- 		<id property="seq" column="SEQ" /> -->
+<!-- 		<result property="title" column="TITLE" /> -->
+<!-- 		<result property="writer" column="WRITER" /> -->
+<!-- 		<result property="content" column="CONTENT" /> -->
+<!-- 	</resultMap> -->
+
+	<select id="getBoardList" resultType="boarddto">
+		SELECT * FROM BOARD WHERE 1=1
+		<if test="searchCondition == 'TITLE'"> AND TITLE LIKE CONCAT('%',#{searchKeyword},'%')</if>
+		<if test="searchCondition == 'CONTENT'"> AND CONTENT LIKE CONCAT('%',#{searchKeyword},'%')</if>
+		ORDER BY SEQ DESC
+	</select>
+
+	<select id="getBoard" resultType="boarddto">
+		SELECT * FROM BOARD WHERE SEQ=#{seq}
+	</select>	
+
+	<insert id="insertBoard">
+		INSERT INTO BOARD(TITLE, WRITER, CONTENT, FILENAME) VALUES(#{title}, #{writer}, #{content}, #{filename})
+	</insert>
+
+	<update id="updateBoard">
+		UPDATE BOARD SET TITLE =#{title}, CONTENT=#{content} WHERE SEQ=#{seq}
+	</update>
+
+	<delete id="deleteBoard">
+		DELETE FROM BOARD WHERE SEQ = #{seq}
+	</delete>
+
+</mapper>

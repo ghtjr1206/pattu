@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<context:component-scan base-package="com.my.web" />
+	
+	<!--<mvc:annotation-driven />  -->
+	<annotation-driven />
+
+	<!-- <mvc:resources mapping="/front/**" location="/resources/css/,/resources/js/" /> -->
+<!-- 	<mvc:resources mapping="/resources/**" location="/resources/" /> -->
+
+	<!-- 
+	
+		servlet에 타면 안되는 url을 걸러준다. webapp에 resources폴더를 반드시 만들어 줘야한다.
+		반드시 프레젠테이션 레이어 단에있는 spring 빈 설정파일에 제외할 url경로를 기술해 줘야한다.
+		
+		
+		 location => 실질적이 경로  ex > /resources/css/ : resources폴더안에 있는 모든 css
+		 mapping => 별칭  ex > /resources/** : 이 안에들어있는 파일이나 폴더까지 기술할 수 있어요~
+		 
+		 /resources/css/a.css  =>mapping="/resources/**"  => location="/resources/"이 경로에서 => /resources/css/a.css 이 아이를 찾아라.
+	
+	-->
+	
+	<!-- <resources mapping="/front/**" location="/resources/css/,/resources/js/" /> -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- ViewResolver -->
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+
+	<!-- interceptors -->
+	<interceptors>
+		<interceptor>
+		<!-- mapping : interceptor을 무조건 타라는 url패턴 지정 -->
+		<!-- /* => 전체파일  -->
+<!-- 			<mapping path="/*" /> -->
+			<mapping path="/main*" />
+<!-- 			<mapping path="/join*" /> -->
+		<!-- exclude-mapping : interceptor을 타면 안되는 url패턴 지정  -->
+			<exclude-mapping path="/login*" />
+			<exclude-mapping path="/join*" />
+			<exclude-mapping path="/home*" />
+			<exclude-mapping path="/front/**" />
+			<exclude-mapping path="/resources/" />
+			<exclude-mapping path="/pathvar/**" />
+			<beans:bean class="com.my.web.interceptor.Interceptor" />
+		</interceptor>
+	</interceptors>
+
+</beans:beans>
